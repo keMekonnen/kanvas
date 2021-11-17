@@ -12,3 +12,7 @@ The mixers are stored under the entityCount when the mesh was imported.
 
 ## controllers: *dict*
 similair to `kanvas.mixers`, but instead stores the controllers for all the objects initialized with a controller. 
+
+
+## entityCount *int*
+number of separate entities loaded into the instance

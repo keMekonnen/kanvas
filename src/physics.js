@@ -4,10 +4,10 @@ class Physics {
         this.parent = mega
     }
     Update(time, delta){
-        let ents = this.parent.mega.entities
+        let ents = this.parent.entities
         for(let player in ents.players){
-            if(ents.players[player].isGrounded){
-                //move player Down
+            if(!ents.players[player].isGrounded){
+                this.parent.utils.log("wassusp")
             }
         }
     }

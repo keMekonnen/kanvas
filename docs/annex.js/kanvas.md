@@ -26,13 +26,17 @@ iT
 - debug
 - mixers
 - controllers
-- entities && entityCount
+- entityCount
+- three
 ### post-init
 - threejs
 - scene
 - camera
 - clock
-
+### pre-run
+- terr
+### specialized (have their own separate doc)
+- entities 
 
 ## methods
 - init

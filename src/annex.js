@@ -6,7 +6,7 @@ import { CharacterController } from './charControllers.js'
 import { Physics } from './physics.js'
 import { Terrain } from './terrain.js'
 class Kanvas {
-    constructor(debug, iT='st', data){
+    constructor(debug, iT='st'){
         this.three = THREE
         this.debug = debug
         this.subs(iT)
@@ -21,13 +21,22 @@ class Kanvas {
         this.entities = {
             'players':[],
             'staticObjs': [],
-            'ground': {"verts":[]},
+            'ground': {"verts":[], "pos": new THREE.Vector3(), 'h':0,'w':0, 'wS':0, 'hS':0},
             'dynamicObjs': [],
-            'mods':[],
-            'npc': []
+            'mobs':[]
         }
 
         window.addEventListener('resize', () => {this.OnWindowResize()}, false)
+    }
+    terrainSetup(data){
+        this.terr = new this.terrain(THREE, data)
+        this.entities.ground.verts = this.terr.geom.vertices
+        this.entities.ground.pos = this.terr.plane.position
+        this.entities.ground.w = this.terr.w
+        this.entities.ground.h = this.terr.h
+        this.entities.ground.wS = this.terr.wS
+        this.entities.ground.hS = this.terr.hS
+        this.scene.add(this.terr.plane)
     }
     subs(iT){
         this.gui = new gui()
@@ -50,7 +59,7 @@ class Kanvas {
                 this.utils.doneFuncs.push(callback)
             }
         },
-        'doneFuncs': []
+        'doneFuncs': [],
     }
     init(){
         this.clock = new THREE.Clock()

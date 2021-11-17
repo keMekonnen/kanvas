@@ -10,9 +10,59 @@ class CharacterController{
             this.debug = instance.debug
             this.THREE = three
             this.velocity = 0.5
+            this.jumpForce = 0.3
             this.player.mesh.rotation.y = 0
-            this.worldPos = this.player.mesh.position
+            this.worldPos = new this.THREE.Vector3()
             this.ground = this.instance.entities.ground
+    }
+    calcSegAtPoint(point, w, wS, h=undefined, hS=undefined){
+        h = h ? h : w
+        hS = hS ? hS : wS
+        point.x = Math.round(point.x)
+        point.y = Math.round(point.y)
+        point.z = Math.round(point.z)
+        let findClosest = (arr,num) => {
+            let closest = arr[0];
+            for(let item of arr){
+              if(Math.abs(item - num)<Math.abs(closest - num)){
+                closest = item;
+              }
+            }
+            return closest;
+        }
+        let genArr = (inc, max) => {
+            let arr = []
+            let t = -max/2
+            while(t < max){
+                t = t+inc
+                arr.push(t)
+            }
+            return arr
+        }
+        
+        let incW = w/wS
+        let clW = findClosest(genArr(incW, w), point.x)
+        let incH = h/hS
+        let clH = findClosest(genArr(incH, w), point.z)
+        return new this.THREE.Vector3(clW, clH, 0)
+    }
+    findIndinVec3(list= [], vec3 = new THREE.Vector3()){
+        for(let ell of list){
+            if(ell.x == vec3.x){
+                if(ell.y == vec3.y){
+                    return ell
+                }
+                
+            }
+        }
+    }
+    setIsG(posOnTerr){
+        if(posOnTerr.z == this.worldPos.y){
+            this.player.isGrounded = true
+            return true
+        }
+        this.player.isGrounded = false
+        return false
     }
     Update(timeElapsed, input){
         try{
@@ -23,23 +73,21 @@ class CharacterController{
                 mesh.rotation.y += direction*Math.PI/180
 
                 let movementZ = input.keys.forward ? this.velocity : (input.keys.backward? -this.velocity : 0)
-                let movementX = input.keys.left ? this.velocity : (input.keys.right? -this.velocity: 0)
+                //let movementX = input.keys.left ? this.velocity : (input.keys.right? -this.velocity: 0)
                 
-                let moveIn = new this.THREE.Vector3(movementX, 0, movementZ)
+                // let moveIn = new this.THREE.Vector3(movementX, 0, movementZ)
+                let moveIn = new this.THREE.Vector3(0, 0, movementZ)
                 //this.worldPos.add(moveIn)
                 moveIn.applyQuaternion(mesh.quaternion)
                 mesh.position.add(moveIn)
-
-                //this.instance.utils.log(mesh.position)
-                let verts = this.ground.verts
-                let terrVer = new this.THREE.Vector3(Math.floor(this.worldPos.x), Math.floor(this.worldPos.x), this.worldPos.y)
-                terrVer.applyQuaternion(new this.THREE.Quaternion(1,0,0,0))
-                // this.instance.utils.log(verts)
-                this.instance.utils.log(terrVer)
-                this.instance.utils.log(verts.indexOf(terrVer))
+                mesh.getWorldPosition(this.worldPos)
+                let isG = this.setIsG(this.findIndinVec3( this.ground.verts, this.calcSegAtPoint(this.worldPos, this.ground.w, this.ground.wS)))
+                this.instance.utils.log(isG)
+                
             }
             this.cam.Update(input.keys.backward)
         }
+        
         catch(err){
             if(this.debug){
                 console.log(err)
@@ -168,7 +216,7 @@ class FroWalkState extends State {
         if(!(input.keys.forward)) {
             this._parent.SetState('idle')
         }
-        else if(input.keys.backward && !(input._keys.forward)){
+        else if(input.keys.backward && !(input.keys.forward)){
             this._parent.SetState('backWalk')
         }
     }

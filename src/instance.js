@@ -10,19 +10,19 @@ instance.run = () => {
         'froWalk': '../resources/xbot/Walking.fbx',
         'backWalk': '../resources/xbot/Walking Backwards.fbx',
     }, 
-    instance.cCon, ThirdPersonCamera)
+    new instance.three.Vector3(0,10,0),
+    instance.cCon, 
+    ThirdPersonCamera)
     //instance.FBX.loadStaticFBX('../resources/skybox/02/hothSky.fbx', 'staticObjs')
     instance.lights.ambientLightSetup()
     instance.lights.directionalLightSetup()
     instance.skyboxSetup()
-    instance.terr = new instance.terrain(instance.three, {segs:100})
-    instance.entities.ground.verts = instance.terr.geom.vertices
-    instance.scene.add(instance.terr.plane)
+    instance.terrainSetup({w:400, wS:10})
     instance.RAF()
 }
 instance.RAF = (t) => {
     instance.threejs.render(instance.scene, instance.camera)
-    //if(instance.phy) {instance.phy.Update(t, instance.clock.getDelta())}
+    // if(instance.phy) {instance.phy.Update(t, instance.clock.getDelta())}
     instance.Step()
     for(let controller in instance.controllers){
         instance.controllers[controller].Update(t, instance.input)

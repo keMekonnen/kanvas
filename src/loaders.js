@@ -35,6 +35,7 @@ class FBX {
         name=''+this.parent.entityCount,
         modelPath, 
         animPaths={}, 
+        position = undefined,
         cCon=undefined,
         camera= undefined)
         {
@@ -49,6 +50,8 @@ class FBX {
                 fbx.traverse(c => {
                     c.castShadow = true
                 })
+                let pos = position ? position : new this.THREE.Vector3()
+                fbx.position.set(pos.x, pos.y, pos.z)
                 try {
 
                     let animClips = {}

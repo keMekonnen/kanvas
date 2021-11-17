@@ -11,7 +11,7 @@ class ThirdPersonCamera{
         let vecs = {
             "offset": new this.THREE.Vector3(-15, 20, -30),
             "lookAt": new this.THREE.Vector3(0, 10, 30),
-            "offsetB": new this.THREE.Vector3(15, 20, 30),
+            "offsetB": new this.THREE.Vector3(-15, 20, 30),
             "lookAtB": new this.THREE.Vector3(0, 10, -30)
         }
         let ideal = vecs[ind]
