@@ -1,5 +1,5 @@
 # kanvas
-this a three.js and cannon.js based MMORPG game, currently in development
+this a three.js based MMORPG game, currently in development
 
 ## dependencies
 - three.js
